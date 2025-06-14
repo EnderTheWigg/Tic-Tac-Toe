@@ -6,6 +6,6 @@ public class GameRunner {
     }
 
     public static void main(String[] args) {
-        new GameBoard();
+        new StartScreen();
     }
 }
