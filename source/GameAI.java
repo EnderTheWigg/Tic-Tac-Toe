@@ -41,6 +41,14 @@ public class GameAI {
     private int getRandomMove(){
         //Return random valid spot on board
         boolean validMove = false;
+        boolean hasPossibleMove = false;
+        for (String s : botBoard) {
+            if(s.equals(""))
+                hasPossibleMove = true;
+        }
+        if(!hasPossibleMove){
+            return -1;
+        }
         while(validMove == false){
             int move = (int)Math.ceil(Math.random() * 8);
             if(botBoard[move].equals("")){

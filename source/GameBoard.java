@@ -10,7 +10,8 @@ public class GameBoard {
     public static JButton[][] buttons;
     public static boolean playerXTurn = true;
     public static String botDifficulty;
-    public boolean botEnabled = false;;
+    public boolean botEnabled = false;
+    public boolean isGameOver = false;
 
     public GameBoard(String botDiff){
         botDifficulty = botDiff;
@@ -44,7 +45,6 @@ public class GameBoard {
     }
 
     public boolean checkForWin(){
-        //No win if random AI?
         for (int i = 0; i < buttons.length; i++) {
             if((buttons[0][i].getText() == buttons[1][i].getText()) && (buttons[1][i].getText() == buttons[2][i].getText()) && !buttons[0][i].getText().equals("")){
                 if(playerXTurn){
@@ -58,9 +58,25 @@ public class GameBoard {
                     buttons[2][i].setBackground(Color.RED);
                 }
                 showMessageDialog(null, "Player " + (playerXTurn ? "X": "O") + " Wins!");
-                return true;
+                return gameOver();
             }
+        }
+        for (int i = 0; i < buttons.length; i++) {
+            if((buttons[i][0].getText() == buttons[i][1].getText()) && (buttons[i][1].getText() == buttons[i][2].getText()) && !buttons[i][0].getText().equals("")){
+                if(playerXTurn){
+                    buttons[i][0].setBackground(Color.GREEN);
+                    buttons[i][1].setBackground(Color.GREEN);
+                    buttons[i][2].setBackground(Color.GREEN);
+                }
+                else{
+                    buttons[i][0].setBackground(Color.RED);
+                    buttons[i][1].setBackground(Color.RED);
+                    buttons[i][2].setBackground(Color.RED);
+                }
+                showMessageDialog(null, "Player " + (playerXTurn ? "X": "O") + " Wins!");
+                return gameOver();
             }
+        }
         if((buttons[0][0].getText() == buttons[1][1].getText()) && (buttons[1][1].getText() == buttons[2][2].getText()) && !buttons[0][0].getText().equals("")){
 
                 if(playerXTurn){
@@ -74,7 +90,7 @@ public class GameBoard {
                     buttons[2][2].setBackground(Color.RED);
                 }
                 showMessageDialog(null, "Player " + (playerXTurn ? "X": "O") + " Wins!");
-                return true;
+                return gameOver();
             }
         if((buttons[0][2].getText() == buttons[1][1].getText()) && (buttons[1][1].getText() == buttons[2][0].getText()) && !buttons[0][2].getText().equals("")){
             if(playerXTurn){
@@ -88,7 +104,7 @@ public class GameBoard {
                     buttons[2][0].setBackground(Color.RED);
                 }
                 showMessageDialog(null, "Player " + (playerXTurn ? "X": "O") + " Wins!");
-            return true;
+            return gameOver();
         }
 
         return false;
@@ -101,68 +117,85 @@ public class GameBoard {
         return buttons;
     }
 
+    public boolean getIsGameOver(){
+        return isGameOver;
+    }
+
+    public boolean getIsPlayerXTurn(){
+        return playerXTurn;
+    }
+
+    public boolean nextTurn(){
+        playerXTurn = !playerXTurn;
+        return playerXTurn;
+    }
+
+    public boolean gameOver(){
+        isGameOver = true;
+        return isGameOver;
+    }
+
 }
 
 class CellClickListener implements ActionListener{
     GameBoard board;
     String botDifficulty;
     JButton[][] buttons;
-    boolean isPlayerXTurn;
     public CellClickListener(GameBoard x){
         this.board = x;
         botDifficulty = board.getBotDifficulty();
         buttons = board.getButtons();
-        //isPlayerXTurn = board.isPlayerXTurn();
-        isPlayerXTurn = GameBoard.playerXTurn;
-        //System.out.println(isPlayerXTurn);
     }
     
     @Override
     public void actionPerformed(ActionEvent e) {
         JButton clickedButton = (JButton)e.getSource();
 
+        if(board.getIsGameOver() == false){
 
-        //I Think I shouldn't be using AI here, because it won't trigger as it won't ever move? Or make it so ai auto runs after player moves.
-        if(botDifficulty.equals("None") || botDifficulty.equals("AI Difficulty")){
+            //I Think I shouldn't be using AI here, because it won't trigger as it won't ever move? Or make it so ai auto runs after player moves.
+            if(botDifficulty.equals("None") || botDifficulty.equals("AI Difficulty")){
 
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 3; j++) {
-                    if(buttons[i][j] == clickedButton){
-                        if(buttons[i][j].getText().equals("")){
-                            buttons[i][j].setText(GameBoard.playerXTurn ? "X" : "O");
-                            board.checkForWin();
-                            GameBoard.playerXTurn = !GameBoard.playerXTurn;
+                for (int i = 0; i < 3; i++) {
+                    for (int j = 0; j < 3; j++) {
+                        if(buttons[i][j] == clickedButton){
+                            if(buttons[i][j].getText().equals("")){
+                                buttons[i][j].setText(board.getIsPlayerXTurn() ? "X" : "O");
+                                board.checkForWin();
+                                board.nextTurn();
+                            }
                         }
                     }
                 }
             }
-        }
-        else{
-            //Theoretically this will trigger when a player moves, so we know it's the player
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 3; j++) {
-                    if(buttons[i][j] == clickedButton){
-                        if(buttons[i][j].getText().equals("")){
-                            buttons[i][j].setText("X");
-                            board.checkForWin();
-                            GameBoard.playerXTurn = !GameBoard.playerXTurn;
+            else{
+                //Theoretically this will trigger when a player moves, so we know it's the player
+                for (int i = 0; i < 3; i++) {
+                    for (int j = 0; j < 3; j++) {
+                        if(buttons[i][j] == clickedButton){
+                            if(buttons[i][j].getText().equals("")){
+                                buttons[i][j].setText("X");
+                                board.checkForWin();
+                                board.nextTurn();
+                            }
                         }
                     }
                 }
-            }
-
-            //and we can just have the ai go right after
-            GameAI bot = new GameAI(buttons, botDifficulty);
-            int gridNum = bot.makeMove();
-            int k = 0;
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 3; j++) {
-                    if(k == gridNum){
-                        buttons[i][j].setText("O");
-                        board.checkForWin();
-                        GameBoard.playerXTurn = !GameBoard.playerXTurn;
+                if(!board.getIsGameOver()){
+                    //and we can just have the ai go right after
+                    GameAI bot = new GameAI(buttons, botDifficulty);
+                    int gridNum = bot.makeMove();
+                    int k = 0;
+                    for (int i = 0; i < 3; i++) {
+                        for (int j = 0; j < 3; j++) {
+                            if(k == gridNum){
+                                buttons[i][j].setText("O");
+                                board.checkForWin();
+                                board.nextTurn();
+                            }
+                            k++;
+                        }
                     }
-                    k++;
                 }
             }
         }
