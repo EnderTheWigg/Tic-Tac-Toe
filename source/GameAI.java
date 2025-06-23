@@ -24,7 +24,7 @@ public class GameAI {
 
     }
 
-    public String[] parseBoard(JButton[][] gameBoard){
+    public static String[] parseBoard(JButton[][] gameBoard){
         //Convert board into a 1D array for ease of use
         int k = 0;
         String[] parsedBoard = new String[9];
