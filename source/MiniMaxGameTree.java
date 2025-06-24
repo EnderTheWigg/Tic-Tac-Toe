@@ -7,37 +7,43 @@ public class MiniMaxGameTree{
     boolean isXTurn;
     String[] currentBoard;
 
-//Find empty slots
-//Go through every empty space, moving there
-//check for win
-//recurse
-//seperate method to score?
-//track whether it should be the ai or players turn
-    public MiniMaxGameTree(GameBoard x){
-        root = new TNode(GameAI.parseBoard(x.getButtons()));
-        isXTurn = true; //because it needs to start false in the recursion
+
+    public MiniMaxGameTree(String[] x){
+        //root = new TNode(GameAI.parseBoard(x.getButtons()));
+        isXTurn = true; 
     }
 
-    private void miniMax(String[] board){
+    public int miniMax(String[] board, String player){
         int iterationResult = 0;
+        int greatest = Integer.MIN_VALUE;
+        int smallest = Integer.MAX_VALUE;
+        int index = -1;
 
         isXTurn = !isXTurn; //starting recursion as false
         ArrayList<Integer> emptyList = getEmptyIndicies(board);
         if(emptyList.size() == 0)
-            iterationResult += 0;
+            return iterationResult += 0;
         
         else if(checkForWin(board, "X"))
-            iterationResult += -1;
+            return iterationResult += -1;
         
         else if(checkForWin(board, "O"))
-            iterationResult += 1;
-        
+            return iterationResult += 1;
 
         for (int i = 0; i < emptyList.size()-1; i++) {
             String[] newBoard = board;
             newBoard[emptyList.get(i)] = (isXTurn ? "X" : "O");
-            miniMax(newBoard);
+            iterationResult = miniMax(newBoard, (isXTurn ? "O" : "X"));
+            if(isXTurn && iterationResult > greatest){
+                greatest = iterationResult;
+                index = emptyList.get(i);
+            }
+            else if (!isXTurn && iterationResult < smallest) {
+                smallest = iterationResult;
+                index = emptyList.get(i);
+            }
         }
+        return index;
     }
 
     private ArrayList<Integer> getEmptyIndicies(String[] board){
