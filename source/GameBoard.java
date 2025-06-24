@@ -153,7 +153,6 @@ class CellClickListener implements ActionListener{
 
         if(board.getIsGameOver() == false){
 
-            //I Think I shouldn't be using AI here, because it won't trigger as it won't ever move? Or make it so ai auto runs after player moves.
             if(botDifficulty.equals("None") || botDifficulty.equals("AI Difficulty")){
 
                 for (int i = 0; i < 3; i++) {
@@ -184,17 +183,11 @@ class CellClickListener implements ActionListener{
                 if(!board.getIsGameOver()){
                     //and we can just have the ai go right after
                     GameAI bot = new GameAI(buttons, botDifficulty);
-                    int gridNum = bot.makeMove();
-                    int k = 0;
-                    for (int i = 0; i < 3; i++) {
-                        for (int j = 0; j < 3; j++) {
-                            if(k == gridNum){
-                                buttons[i][j].setText("O");
-                                board.checkForWin();
-                                board.nextTurn();
-                            }
-                            k++;
-                        }
+                    int[] gridNum = bot.makeMove();
+                    if(gridNum != null){
+                        buttons[gridNum[0]][gridNum[1]].setText("O");
+                        board.checkForWin();
+                        board.nextTurn();
                     }
                 }
             }

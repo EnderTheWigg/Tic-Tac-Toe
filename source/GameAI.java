@@ -1,18 +1,17 @@
 package source;
-import java.util.ArrayList;
 
 import javax.swing.*;
 
 public class GameAI {
     private String botDifficulty;
-    private String[] botBoard;
+    private String[][] botBoard;
     int iter = 0;
     public GameAI(JButton[][] board, String botDifficulty){
         this.botDifficulty = botDifficulty;
         botBoard = parseBoard(board);
     }
 
-    public int makeMove(){
+    public int[] makeMove(){
         if(botDifficulty.equals("Random")){
             return getRandomMove();
         }
@@ -26,133 +25,149 @@ public class GameAI {
             return getPerfectMove();
         }
         System.out.println("AI difficulty selection Error");
-        return -1;
+        return null;
 
     }
 
-    public static String[] parseBoard(JButton[][] gameBoard){
+    public static String[][] parseBoard(JButton[][] gameBoard){
         //Convert board into a 1D array for ease of use
-        int k = 0;
-        String[] parsedBoard = new String[9];
+        String[][] parsedBoard = new String[3][3];
         for (int i = 0; i < gameBoard.length; i++) {
             for (int j = 0; j < gameBoard.length; j++) {
-                parsedBoard[k] = gameBoard[i][j].getText();
-                k++;
+                parsedBoard[i][j] = gameBoard[i][j].getText();
             }
         }
 
         return parsedBoard;
     }
 
-    private int getRandomMove(){
+    private int[] getRandomMove(){
         //Return random valid spot on board
         boolean validMove = false;
-        boolean hasPossibleMove = false;
-        for (String s : botBoard) {
-            if(s.equals(""))
-                hasPossibleMove = true;
-        }
-        if(!hasPossibleMove){
-            return -1;
+        boolean hasMove = false;
+        hasMove = hasPossibleMove(botBoard);
+        if(!hasMove){
+            return null;
         }
         while(validMove == false){
-            int move = (int)Math.ceil(Math.random() * 8);
-            if(botBoard[move].equals("")){
-                return move;
-            }
-        }
-        return -1;
-    }
-
-    private int getPerfectMove(){
-        int bestVal = -1000;
-        int bestMove = -1;
-
-        for (int i = 0; i < botBoard.length; i++) {
-            if(botBoard[i].equals("")){
-                botBoard[i] = "O";
-
-                int moveVal = miniMax(botBoard, "X");
-
-                botBoard[i] = "";
-
-                if(moveVal > bestVal){
-                    bestMove = i;
-                    bestVal = moveVal;
+            int num = (int)Math.ceil(Math.random() * 8);
+            int k = 0;
+            for (int i = 0; i < botBoard.length; i++) {
+                for (int j = 0; j < botBoard.length; j++) {
+                    if(k == num && botBoard[i][j].equals(""))
+                        return new int[]{i, j};
+                    k++;
+                }
                 }
             }
-        }
-        return bestMove;
+        
+        return null;
     }
 
-    public int miniMax(String[] board, String player){
-        int bestVal;
+    private int[] getPerfectMove(){
+        int bestVal = Integer.MIN_VALUE;
+        int bestRow = -1;
+        int bestCol = -1;
 
-        ArrayList<Integer> emptyList = getEmptyIndicies(board);
-        if(emptyList.size() == 0)
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if(botBoard[i][j].equals("")){
+                    botBoard[i][j] = "O";
+
+                    int moveVal = minimax(botBoard, 0, false);
+
+                    botBoard[i][j] = "";
+                    //iter++;
+
+                    if(moveVal > bestVal){
+                        bestRow = i;
+                        bestCol = j;
+                        bestVal = moveVal;
+                    }
+                }
+            }
+            
+        }
+        System.out.println(iter);
+        return new int[]{bestRow, bestCol};
+    }
+
+
+    private boolean hasPossibleMove(String[][] board){
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if(board[i][j].equals(""))
+                    return true;
+            }
+        }
+        return false;
+    }
+    public int minimax(String[][] board, int depth, boolean isMaximizing){
+        int bestVal;
+        
+        if(!hasPossibleMove(board))
             return 0;
         
-        else if(checkForWin(board, "X"))
-            return  -1;
+        int score = checkForWin(board);
+        if(score != 0)
+            return score;
         
-        else if(checkForWin(board, "O"))
-            return 1;
-        
-        if(player.equals("O")){
-            bestVal = -1000;
-            for (int i = 0; i < emptyList.size()-1; i++) {
-                board[emptyList.get(i)] = "O";
-                bestVal = Math.max(bestVal, miniMax(board, "X"));
-                iter++;
-                board[emptyList.get(i)] = "";
+        if(isMaximizing){
+            bestVal = Integer.MIN_VALUE;
+            for (int i = 0; i < 3; i++) {
+                for(int j = 0; j < 3; j++){
+                    if(board[i][j].equals("")){
+                        board[i][j] = "O";
+                        int val = minimax(board, depth + 1, false);
+                        iter++;
+                        board[i][j] = "";
+                        bestVal = Math.max(bestVal, val);
+                    }
+                }
+    
             }
             return bestVal;
         }
         else{
-            bestVal = 1000;
-                for (int i = 0; i < emptyList.size()-1; i++) {
-                board[emptyList.get(i)] = "X";
-                bestVal = Math.min(bestVal, miniMax(board, "O"));
-                iter++;
-                board[emptyList.get(i)] = "";
+            bestVal = Integer.MAX_VALUE;
+            for (int i = 0; i < 3; i++) {
+                for(int j = 0; j < 3; j++){
+                    if(board[i][j].equals("")){
+                        board[i][j] = "X";
+                        int val = minimax(board, depth + 1, true);
+                        iter++;
+                        board[i][j] = "";
+                        bestVal = Math.min(bestVal, val);
+                    }
+                }
+    
             }
             return bestVal;
         }
     }
 
-    private ArrayList<Integer> getEmptyIndicies(String[] board){
-        ArrayList<Integer> empty = new ArrayList<Integer>();
-        for (int i = 0; i < board.length; i++) {
-                if (board[i].equals("")) {
-                    empty.add(i);
-                }
+    public int checkForWin(String[][] board){
+        for (int i = 0; i < 3; i++) {
+            if(board[i][0].equals("X") && board[i][0].equals(board[i][1]) && board[i][1].equals(board[i][2]))
+                return -10;
+            if(board[i][0].equals("O") && board[i][0].equals(board[i][1]) && board[i][1].equals(board[i][2]))
+                return 10;
         }
-        return empty;
-    }
-
-    public boolean checkForWin(String[] board, String player){
-        for (int i = 0; i < board.length; i++) {
-            if(i <= 2){
-                if((!board[i].equals("") && board[i].equals(player)) && board[i].equals(board[i+3]) && board[i+3].equals(board[i+6])){
-                    return true;
-                }
-            }
-            if(i == 0 || i == 3 || i == 6){
-                if((!board[i].equals("") && board[i].equals(player)) && board[i].equals(board[i+1]) && board[i+1].equals(board[i+2])){
-                    return true;
-                }
-            }
-            if(i == 0){
-                if((!board[i].equals("") && board[i].equals(player)) && board[i].equals(board[i+4]) && board[i+4].equals(board[i+8])){
-                    return true;
-                }
-            }
-            if(i == 2){
-                if((!board[i].equals("") && board[i].equals(player)) && board[i].equals(board[i+2]) && board[i+2].equals(board[i+4])){
-                    return true;
-                }
-            }
+        for (int i = 0; i < 3; i++) {
+            if(board[0][i].equals("X") && board[0][i].equals(board[1][i]) && board[1][i].equals(board[2][i]))
+                return -10;
+            if(board[0][i].equals("O") && board[0][i].equals(board[1][i]) && board[1][i].equals(board[2][i]))
+                return 10;
         }
-        return false;
+        if(board[0][0].equals("X") && board[0][0].equals(board[1][1]) && board[1][1].equals(board[2][2]))
+            return -10;
+        if(board[0][0].equals("O") && board[0][0].equals(board[1][1]) && board[1][1].equals(board[2][2]))
+            return 10;
+        if(board[0][2].equals("X") && board[0][2].equals(board[1][1]) && board[1][1].equals(board[2][0]))
+            return -10;
+        if(board[0][2].equals("O") && board[0][2].equals(board[1][1]) && board[1][1].equals(board[2][0]))
+            return 10;
+        
+        return 0;
     }
 }
