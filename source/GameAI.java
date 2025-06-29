@@ -88,7 +88,7 @@ public class GameAI {
             }
             
         }
-        System.out.println(iter);
+        System.out.println("Iterations: " + iter);
         return new int[]{bestRow, bestCol};
     }
 

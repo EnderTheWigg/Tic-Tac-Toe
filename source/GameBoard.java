@@ -78,7 +78,7 @@ public class GameBoard {
         }
         for (int i = 0; i < buttons.length; i++) {
             if((buttons[0][i].getText() == buttons[1][i].getText()) && (buttons[1][i].getText() == buttons[2][i].getText()) && !buttons[0][i].getText().equals("")){
-                if(playerXTurn){
+                if(buttons[0][i].getText().equals("X")){
                     buttons[0][i].setBackground(Color.GREEN);
                     buttons[1][i].setBackground(Color.GREEN);
                     buttons[2][i].setBackground(Color.GREEN);
@@ -95,7 +95,7 @@ public class GameBoard {
                     "Play Again?",
                     JOptionPane.YES_NO_OPTION);
                 if(choice == 0){
-                    if(!botEnabled)
+                    if(botEnabled)
                         playerXTurn = !playerXTurn;
                     new StartScreen();
                     frame.dispose();
@@ -109,7 +109,7 @@ public class GameBoard {
         }
         for (int i = 0; i < buttons.length; i++) {
             if((buttons[i][0].getText() == buttons[i][1].getText()) && (buttons[i][1].getText() == buttons[i][2].getText()) && !buttons[i][0].getText().equals("")){
-                if(playerXTurn){
+                if(buttons[i][0].getText().equals("X")){
                     buttons[i][0].setBackground(Color.GREEN);
                     buttons[i][1].setBackground(Color.GREEN);
                     buttons[i][2].setBackground(Color.GREEN);
@@ -125,7 +125,7 @@ public class GameBoard {
                     "Play Again?",
                     JOptionPane.YES_NO_OPTION);
                 if(choice == 0){
-                    if(!botEnabled)
+                    if(botEnabled)
                         playerXTurn = !playerXTurn;
                     new StartScreen();
                     frame.dispose();
@@ -138,7 +138,7 @@ public class GameBoard {
         }
         if((buttons[0][0].getText() == buttons[1][1].getText()) && (buttons[1][1].getText() == buttons[2][2].getText()) && !buttons[0][0].getText().equals("")){
 
-                if(playerXTurn){
+                if(buttons[0][0].getText().equals("X")){
                     buttons[0][0].setBackground(Color.GREEN);
                     buttons[1][1].setBackground(Color.GREEN);
                     buttons[2][2].setBackground(Color.GREEN);
@@ -154,7 +154,7 @@ public class GameBoard {
                     "Play Again?",
                     JOptionPane.YES_NO_OPTION);
                 if(choice == 0){
-                    if(!botEnabled)
+                    if(botEnabled)
                         playerXTurn = !playerXTurn;
                     new StartScreen();
                     frame.dispose();
@@ -165,7 +165,7 @@ public class GameBoard {
                 return gameOver();
             }
         if((buttons[0][2].getText() == buttons[1][1].getText()) && (buttons[1][1].getText() == buttons[2][0].getText()) && !buttons[0][2].getText().equals("")){
-            if(playerXTurn){
+            if(buttons[0][2].getText().equals("X")){
                     buttons[0][2].setBackground(Color.GREEN);
                     buttons[1][1].setBackground(Color.GREEN);
                     buttons[2][0].setBackground(Color.GREEN);
@@ -181,7 +181,7 @@ public class GameBoard {
                     "Play Again?",
                     JOptionPane.YES_NO_OPTION);
                 if(choice == 0){
-                    if(!botEnabled)
+                    if(botEnabled)
                         playerXTurn = !playerXTurn;
                     new StartScreen();
                     frame.dispose();
