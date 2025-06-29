@@ -74,7 +74,7 @@ public class GameAI {
                 if(botBoard[i][j].equals("")){
                     botBoard[i][j] = "O";
 
-                    int moveVal = minimax(botBoard, 0, false);
+                    int moveVal = minimax(botBoard, 0, false, Integer.MIN_VALUE, Integer.MAX_VALUE);
 
                     botBoard[i][j] = "";
                     //iter++;
@@ -102,7 +102,7 @@ public class GameAI {
         }
         return false;
     }
-    public int minimax(String[][] board, int depth, boolean isMaximizing){
+    public int minimax(String[][] board, int depth, boolean isMaximizing, int alpha, int beta){
         int bestVal;
         
         if(!hasPossibleMove(board))
@@ -114,14 +114,18 @@ public class GameAI {
         
         if(isMaximizing){
             bestVal = Integer.MIN_VALUE;
+            outerLoop:
             for (int i = 0; i < 3; i++) {
                 for(int j = 0; j < 3; j++){
                     if(board[i][j].equals("")){
                         board[i][j] = "O";
-                        int val = minimax(board, depth + 1, false);
+                        int val = minimax(board, depth + 1, false, alpha, beta);
                         iter++;
                         board[i][j] = "";
                         bestVal = Math.max(bestVal, val);
+                        alpha = Math.max(alpha, bestVal);
+                        if(beta <= alpha)
+                            break outerLoop;
                     }
                 }
     
@@ -130,14 +134,18 @@ public class GameAI {
         }
         else{
             bestVal = Integer.MAX_VALUE;
+            outerLoop:
             for (int i = 0; i < 3; i++) {
                 for(int j = 0; j < 3; j++){
                     if(board[i][j].equals("")){
                         board[i][j] = "X";
-                        int val = minimax(board, depth + 1, true);
+                        int val = minimax(board, depth + 1, true, alpha, beta);
                         iter++;
                         board[i][j] = "";
                         bestVal = Math.min(bestVal, val);
+                        beta = Math.min(beta, bestVal);
+                        if(beta <= alpha)
+                            break outerLoop;
                     }
                 }
     
