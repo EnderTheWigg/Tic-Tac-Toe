@@ -65,8 +65,8 @@ public class GameBoard {
                     "Play Again?",
                     JOptionPane.YES_NO_OPTION);
                 if(choice == 0){
-                    if(botEnabled)
-                        playerXTurn = !playerXTurn;
+                    //if(botEnabled)
+                        //playerXTurn = !playerXTurn;
                     new StartScreen();
                     frame.dispose();
                 }
@@ -91,12 +91,12 @@ public class GameBoard {
 
                 int choice = JOptionPane.showConfirmDialog(
                     frame,
-                    "Player " + (playerXTurn ? "X": "O") + " Wins! Would you like to play again?",
+                    "Player " + (buttons[0][i].getText().equals("X") ? "X": "O") + " Wins! Would you like to play again?",
                     "Play Again?",
                     JOptionPane.YES_NO_OPTION);
                 if(choice == 0){
-                    if(botEnabled)
-                        playerXTurn = !playerXTurn;
+                    //if(botEnabled)
+                        //playerXTurn = !playerXTurn;
                     new StartScreen();
                     frame.dispose();
                 }
@@ -121,12 +121,12 @@ public class GameBoard {
                 }
                 int choice = JOptionPane.showConfirmDialog(
                     frame,
-                    "Player " + (playerXTurn ? "X": "O") + " Wins! Would you like to play again?",
+                    "Player " + (buttons[i][0].getText().equals("X") ? "X": "O") + " Wins! Would you like to play again?",
                     "Play Again?",
                     JOptionPane.YES_NO_OPTION);
                 if(choice == 0){
-                    if(botEnabled)
-                        playerXTurn = !playerXTurn;
+                    //if(botEnabled)
+                        //playerXTurn = !playerXTurn;
                     new StartScreen();
                     frame.dispose();
                 }
@@ -150,12 +150,12 @@ public class GameBoard {
                 }
                 int choice = JOptionPane.showConfirmDialog(
                     frame,
-                    "Player " + (playerXTurn ? "X": "O") + " Wins! Would you like to play again?",
+                    "Player " + (buttons[0][0].getText().equals("X") ? "X": "O") + " Wins! Would you like to play again?",
                     "Play Again?",
                     JOptionPane.YES_NO_OPTION);
                 if(choice == 0){
-                    if(botEnabled)
-                        playerXTurn = !playerXTurn;
+                    //if(botEnabled)
+                        //playerXTurn = !playerXTurn;
                     new StartScreen();
                     frame.dispose();
                 }
@@ -177,12 +177,12 @@ public class GameBoard {
                 }
                 int choice = JOptionPane.showConfirmDialog(
                     frame,
-                    "Player " + (playerXTurn ? "X": "O") + " Wins! Would you like to play again?",
+                    "Player " + (buttons[0][2].getText().equals("X") ? "X": "O") + " Wins! Would you like to play again?",
                     "Play Again?",
                     JOptionPane.YES_NO_OPTION);
                 if(choice == 0){
-                    if(botEnabled)
-                        playerXTurn = !playerXTurn;
+                    //if(botEnabled)
+                        //playerXTurn = !playerXTurn;
                     new StartScreen();
                     frame.dispose();
                 }
@@ -249,6 +249,10 @@ class CellClickListener implements ActionListener{
                                 if(!gameOver){
                                     board.nextTurn();
                                 }
+                                if(gameOver)
+                                    if(!board.getIsPlayerXTurn()){
+                                        board.nextTurn();
+                                    }
                             }
                         }
                     }
@@ -276,9 +280,11 @@ class CellClickListener implements ActionListener{
                     if(gridNum != null){
                         buttons[gridNum[0]][gridNum[1]].setText("O");
                         boolean gameOver = board.checkForWin();
-                                if(!gameOver){
-                                    board.nextTurn();
-                                }
+                        board.nextTurn();
+                        if(gameOver)
+                            if(!board.getIsPlayerXTurn()){
+                                board.nextTurn();
+                            }
                     }
                 }
             }
