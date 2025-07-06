@@ -3,7 +3,6 @@ package source;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import static javax.swing.JOptionPane.showMessageDialog;
 
 public class GameBoard {
     private JFrame frame;
@@ -58,24 +57,6 @@ public class GameBoard {
     }
 
     public boolean checkForWin(){
-        if(hasPossibleMove(buttons) == false){
-            int choice = JOptionPane.showConfirmDialog(
-                    frame,
-                    "Tie. Would you like to play again?",
-                    "Play Again?",
-                    JOptionPane.YES_NO_OPTION);
-                if(choice == 0){
-                    //if(botEnabled)
-                        //playerXTurn = !playerXTurn;
-                    new StartScreen();
-                    frame.dispose();
-                }
-                else{
-                    frame.dispose();
-                }
-
-                return gameOver();
-        }
         for (int i = 0; i < buttons.length; i++) {
             if((buttons[0][i].getText() == buttons[1][i].getText()) && (buttons[1][i].getText() == buttons[2][i].getText()) && !buttons[0][i].getText().equals("")){
                 if(buttons[0][i].getText().equals("X")){
@@ -95,8 +76,6 @@ public class GameBoard {
                     "Play Again?",
                     JOptionPane.YES_NO_OPTION);
                 if(choice == 0){
-                    //if(botEnabled)
-                        //playerXTurn = !playerXTurn;
                     new StartScreen();
                     frame.dispose();
                 }
@@ -125,8 +104,6 @@ public class GameBoard {
                     "Play Again?",
                     JOptionPane.YES_NO_OPTION);
                 if(choice == 0){
-                    //if(botEnabled)
-                        //playerXTurn = !playerXTurn;
                     new StartScreen();
                     frame.dispose();
                 }
@@ -154,8 +131,6 @@ public class GameBoard {
                     "Play Again?",
                     JOptionPane.YES_NO_OPTION);
                 if(choice == 0){
-                    //if(botEnabled)
-                        //playerXTurn = !playerXTurn;
                     new StartScreen();
                     frame.dispose();
                 }
@@ -181,8 +156,6 @@ public class GameBoard {
                     "Play Again?",
                     JOptionPane.YES_NO_OPTION);
                 if(choice == 0){
-                    //if(botEnabled)
-                        //playerXTurn = !playerXTurn;
                     new StartScreen();
                     frame.dispose();
                 }
@@ -190,6 +163,22 @@ public class GameBoard {
                     frame.dispose();
                 }
             return gameOver();
+        }
+        if(hasPossibleMove(buttons) == false){
+            int choice = JOptionPane.showConfirmDialog(
+                    frame,
+                    "Tie. Would you like to play again?",
+                    "Play Again?",
+                    JOptionPane.YES_NO_OPTION);
+                if(choice == 0){
+                    new StartScreen();
+                    frame.dispose();
+                }
+                else{
+                    frame.dispose();
+                }
+
+                return gameOver();
         }
 
         return false;
@@ -254,12 +243,13 @@ class CellClickListener implements ActionListener{
                                         board.nextTurn();
                                     }
                             }
+                            
                         }
                     }
                 }
             }
             else{
-                //Theoretically this will trigger when a player moves, so we know it's the player
+                //Triggers on player click
                 for (int i = 0; i < 3; i++) {
                     for (int j = 0; j < 3; j++) {
                         if(buttons[i][j] == clickedButton){
@@ -274,7 +264,7 @@ class CellClickListener implements ActionListener{
                     }
                 }
                 if(!board.getIsGameOver()){
-                    //and we can just have the ai go right after
+                    //Since this is with an ai, and the player has already gone, the ai just goes next.
                     GameAI bot = new GameAI(buttons, botDifficulty);
                     int[] gridNum = bot.makeMove();
                     if(gridNum != null){
