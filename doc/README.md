@@ -29,6 +29,10 @@ The game includes multiple difficulty levels and demonstrates the use of the **m
    git clone https://github.com/your-username/ai-tic-tac-toe.git
 2. Run the main method in the "GameRunner" class
 3. Choose your game options in the menu, and play!
+
+Enjoy,
+
+Brandon Wright, www.linkedin.com/in/brandon-wright-644a74370
    
 ---
 

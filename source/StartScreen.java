@@ -1,8 +1,8 @@
 package source;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.*;
 
 public class StartScreen {
     private JFrame frame;
@@ -41,6 +41,7 @@ public class StartScreen {
         panel.add(new JLabel(" "), gbc);
 
         JLabel comboBoxDescription = new JLabel("Choose AI: ");
+        @SuppressWarnings({ "rawtypes", "unchecked" })
         JComboBox botOptionsBox = new JComboBox(botOptions);
         botOptionsBox.setSelectedIndex(0);
         gbc.gridx = 0;

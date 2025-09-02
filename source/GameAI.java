@@ -5,7 +5,7 @@ import javax.swing.*;
 public class GameAI {
     private String botDifficulty;
     private String[][] botBoard;
-    int iter = 0;
+    //int iter = 0;
     public GameAI(JButton[][] board, String botDifficulty){
         this.botDifficulty = botDifficulty;
         botBoard = parseBoard(board);
@@ -88,7 +88,7 @@ public class GameAI {
             }
             
         }
-        System.out.println("Iterations: " + iter);
+        //System.out.println("Iterations: " + iter); Optional metric to check iteration amounts
         return new int[]{bestRow, bestCol};
     }
 
@@ -120,7 +120,7 @@ public class GameAI {
                     if(board[i][j].equals("")){
                         board[i][j] = "O";
                         int val = minimax(board, depth + 1, false, alpha, beta);
-                        iter++;
+                        //iter++;
                         board[i][j] = "";
                         bestVal = Math.max(bestVal, val);
                         alpha = Math.max(alpha, bestVal);
@@ -140,7 +140,7 @@ public class GameAI {
                     if(board[i][j].equals("")){
                         board[i][j] = "X";
                         int val = minimax(board, depth + 1, true, alpha, beta);
-                        iter++;
+                        //iter++;
                         board[i][j] = "";
                         bestVal = Math.min(bestVal, val);
                         beta = Math.min(beta, bestVal);
