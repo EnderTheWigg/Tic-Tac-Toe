@@ -30,7 +30,7 @@ The game includes multiple difficulty levels and demonstrates the use of the **m
 2. Run the main method in the "GameRunner" class
 3. Choose your game options in the menu, and play!
 
-## Screenshots: 
+## 📸 Screenshots: 
 
 <img width="150" height="150" alt="Start menu image" src="https://github.com/user-attachments/assets/fe7e7a17-921a-4968-8d5f-af4fc6b67ba8" />
 <img width="150" height="150" alt="AI settings" src="https://github.com/user-attachments/assets/0423b396-d54d-4d8f-8882-ad37b69ffd8e" />
